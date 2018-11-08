@@ -1,0 +1,12 @@
+{
+    "name": "guillaumesmo/scdf",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Guillaumesmo\\SCDF\\": "src/"
+        }
+    },
+    "require": {
+        "php-amqplib/php-amqplib": "^2.8"
+    }
+}
