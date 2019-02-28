@@ -18,6 +18,16 @@ abstract class Base
     protected $queues = [];
 
     /**
+     * @var string
+     */
+    private $appLabel;
+
+    /**
+     * @var string
+     */
+    private $streamName;
+
+    /**
      * @param array $bindings
      */
     public function __construct(array $bindings)
@@ -26,14 +36,16 @@ abstract class Base
             return "spring.cloud.stream.bindings.$binding.destination:";
         }, $bindings);
 
+        $longopts[] = 'spring.cloud.dataflow.stream.app.label:';
         $longopts[] = 'spring.cloud.dataflow.stream.name:';
 
         $options = getopt('', $longopts);
+        $this->appLabel = $options['spring.cloud.dataflow.stream.app.label'];
+        $this->streamName = $options['spring.cloud.dataflow.stream.name'];
 
         foreach ($bindings as $binding) {
             $destination = $options["spring.cloud.stream.bindings.$binding.destination"];
-            $stream = $options['spring.cloud.dataflow.stream.name'];
-            $this->queues[$binding] = "$destination.$stream";
+            $this->queues[$binding] = "$destination.{$this->streamName}";
         }
 
         $connection = new AMQPStreamConnection(
